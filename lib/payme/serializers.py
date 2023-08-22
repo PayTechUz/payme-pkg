@@ -2,15 +2,12 @@ from django.conf import settings
 
 from rest_framework import serializers
 
-from payme.models import MerchatTransactionsModel
-from payme.utils.get_params import get_params
+from payme.models import Order
 from payme.utils.logging import logger
-from payme.utils.order_finder import Order
-
-from payme.errors.exceptions import (
-    PerformTransactionDoesNotExist,
-    IncorrectAmount
-)
+from payme.utils.get_params import get_params
+from payme.models import MerchatTransactionsModel
+from payme.errors.exceptions import IncorrectAmount
+from payme.errors.exceptions import PerformTransactionDoesNotExist
 
 
 class MerchatTransactionsModelSerializer(serializers.ModelSerializer):
@@ -36,7 +33,7 @@ class MerchatTransactionsModelSerializer(serializers.ModelSerializer):
                 order = Order.objects.get(
                     id=attrs['order_id']
                 )
-                if order.amount != float(attrs['amount']):
+                if order.amount != int(attrs['amount']):
                     raise IncorrectAmount()
 
             except IncorrectAmount as error:
@@ -45,19 +42,19 @@ class MerchatTransactionsModelSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def validate_amount(self, amount: float) -> float:
+    def validate_amount(self, amount) -> int:
         """
         Validator for Transactions Amount.
         """
         if amount is None:
             raise IncorrectAmount()
 
-        if amount <= float(settings.PAYME.get("PAYME_MIN_AMOUNT", 0)):
+        if int(amount) <= int(settings.PAYME.get("PAYME_MIN_AMOUNT", 0)):
             raise IncorrectAmount("Payment amount is less than allowed.")
 
         return amount
 
-    def validate_order_id(self, order_id: int) -> int:
+    def validate_order_id(self, order_id) -> int:
         """
         Use this method to check if a transaction is allowed to be executed.
 
@@ -89,34 +86,3 @@ class MerchatTransactionsModelSerializer(serializers.ModelSerializer):
         clean_data: dict = serializer.validated_data
 
         return clean_data
-
-
-class OrderModelSerializer(serializers.ModelSerializer):
-    """
-    OrderModelSerializer class \
-        That's used to serialize orders detail data.
-    """
-    class Meta:
-        # pylint: disable=missing-class-docstring
-        model = Order
-        depth = 2
-        exclude = ["id"]
-        read_only_fields = ["__all__"]
-
-    def clean_empty(self, data):
-        # pylint: disable=missing-function-docstring
-        if isinstance(data, dict):
-            return {
-                k: v
-                for k, v in ((k, self.clean_empty(v)) for k, v in data.items())
-                if v is not None and k != 'id'
-            }
-        if isinstance(data, list):
-            return [v for v in map(self.clean_empty, data) if v]
-
-        return data
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-
-        return self.clean_empty(ret)
