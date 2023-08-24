@@ -31,7 +31,7 @@ class MerchantAPIView(APIView):
     def post(self, request) -> Response:
         """
         Payme sends post request to our call back url.
-        That methods are includes 6 methods
+        That methods are includes 5 methods
             - CheckPerformTransaction
             - CreateTransaction
             - PerformTransaction
@@ -55,9 +55,7 @@ class MerchantAPIView(APIView):
                 raise MethodNotFound() from error
 
             except PerformTransactionDoesNotExist as error:
-                logger.error(
-                    "PerformTransactionDoesNotExist Error occurred: %s", error
-                )
+                logger.error("PerformTransactionDoesNotExist Error occurred: %s", error)
                 raise PerformTransactionDoesNotExist() from error
 
             order_id, action = paycom_method(incoming_data.get("params"))
@@ -158,7 +156,7 @@ class MerchantAPIView(APIView):
         """
         pass
 
-    def cancel_transaction(self, order_id, action) -> None:
+    def cancel_transaction(self,order_id, action) -> None:
         """
         need implement in your view class
         """

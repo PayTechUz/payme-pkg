@@ -14,9 +14,10 @@ class CheckTransaction:
     -------------------------
     https://developer.help.paycom.uz/metody-merchant-api/checkperformtransaction
     """
-
     def __call__(self, params: dict) -> None:
-        clean_data: dict = MTMS.get_validated_data(params=params)
+        clean_data: dict = MTMS.get_validated_data(
+            params=params
+        )
 
         try:
             transaction = \
