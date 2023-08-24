@@ -3,7 +3,7 @@ name: Documentation
 on:
   push:
     branches:
-      - payme-pkg-3.0b
+      - master
 jobs:
   deploy:
     runs-on: ubuntu-latest
