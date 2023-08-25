@@ -27,7 +27,7 @@ class GeneratePayLink:
     Parameters
     ----------
     order_id: int — The order_id for paying
-    amount: float — The amount belong to the order
+    amount: int — The amount belong to the order
 
     Returns str — pay link
     ----------------------
@@ -37,7 +37,7 @@ class GeneratePayLink:
     https://developer.help.paycom.uz/initsializatsiya-platezhey/
     """
     order_id: str
-    amount: float
+    amount: int
 
     def generate_link(self) -> str:
         """
@@ -131,23 +131,23 @@ class GeneratePayLink:
         return image_output_path
 
     @staticmethod
-    def to_tiyin(amount: float) -> float:
+    def to_tiyin(amount: int) -> int:
         """ 
         Convert from soum to tiyin. 
 
         Parameters 
         ---------- 
-        amount: float -> order amount 
+        amount: int -> order amount 
         """
         return amount * 100
 
     @staticmethod
-    def to_soum(amount: float) -> float:
+    def to_soum(amount: int) -> int:
         """ 
         Convert from tiyin to soum. 
 
         Parameters 
         ---------- 
-        amount: float -> order amount 
+        amount: int -> order amount 
         """
         return amount / 100

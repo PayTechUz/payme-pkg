@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 )),
                 ('discount', models.FloatField(blank=True, null=True)),
                 ('title', models.CharField(max_length=255)),
-                ('price', models.FloatField(blank=True, null=True)),
+                ('price', models.BigIntegerField(default=0)),
                 ('count', models.IntegerField(default=1)),
                 ('code', models.CharField(max_length=17)),
                 ('units', models.IntegerField(blank=True, null=True)),
@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('_id', models.CharField(max_length=255, null=True)),
                 ('transaction_id', models.CharField(max_length=255, null=True)),
                 ('order_id', models.BigIntegerField(blank=True, null=True)),
-                ('amount', models.FloatField(blank=True, null=True)),
+                ('amount', models.BigIntegerField(blank=True, null=True)),
                 ('time', models.BigIntegerField(blank=True, null=True)),
                 ('perform_time', models.BigIntegerField(default=0, null=True)),
                 ('cancel_time', models.BigIntegerField(default=0, null=True)),
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                     serialize=False, verbose_name='ID'
                 )),
                 ('title', models.CharField(max_length=255)),
-                ('price', models.FloatField(default=0)),
+                ('price', models.BigIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(

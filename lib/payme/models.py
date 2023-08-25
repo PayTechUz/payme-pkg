@@ -9,7 +9,7 @@ class MerchatTransactionsModel(models.Model):
     _id = models.CharField(max_length=255, null=True, blank=False)
     transaction_id = models.CharField(max_length=255, null=True, blank=False)
     order_id = models.BigIntegerField(null=True, blank=True)
-    amount = models.FloatField(null=True, blank=True)
+    amount = models.BigIntegerField(null=True, blank=True)
     time = models.BigIntegerField(null=True, blank=True)
     perform_time = models.BigIntegerField(null=True, default=0)
     cancel_time = models.BigIntegerField(null=True, default=0)
@@ -29,7 +29,7 @@ class ShippingDetail(models.Model):
         That's used for managing shipping
     """
     title = models.CharField(max_length=255)
-    price = models.FloatField(default=0)
+    price = models.BigIntegerField(default=0)
 
     def __str__(self) -> str:
         return f"[{self.pk}] {self.title} {self.price}"
@@ -42,7 +42,7 @@ class Item(models.Model):
     """
     discount = models.FloatField(null=True, blank=True)
     title = models.CharField(max_length=255)
-    price = models.FloatField(null=True, blank=True)
+    price = models.BigIntegerField(default=0)
     count = models.IntegerField(default=1)
     code = models.CharField(max_length=17)
     units = models.IntegerField(null=True, blank=True)
@@ -50,7 +50,7 @@ class Item(models.Model):
     vat_percent = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"[{self.id}] {self.title} #{self.code}"
+        return f"[{self.id}] {self.title} ({self.count} pc.) x {self.price}"
 
 
 class OrderDetail(models.Model):
@@ -66,12 +66,22 @@ class OrderDetail(models.Model):
     )
     items = models.ManyToManyField(Item)
 
+    @property
     def get_items_display(self):
         # pylint: disable=missing-function-docstring
-        return ', '.join([items.title for items in self.items.all()])
+        return ', '.join([items.title for items in self.items.all()[:2]])
+
+    @property
+    def get_total_items_price(self) -> int:
+        # pylint: disable=missing-function-docstring
+        return self.items.all().aggregate(
+            total_price=models.Sum(
+                models.F('price') * models.F('count')
+            )
+        )['total_price']
 
     def __str__(self) -> str:
-        return f"[{self.pk}] {self.get_items_display()}"
+        return f"{self.get_items_display}"
 
 
 class DisallowOverrideMetaclass(models.base.ModelBase):
@@ -96,18 +106,16 @@ class BaseOrder(models.Model, metaclass=DisallowOverrideMetaclass):
     Order class \
         That's used for managing order process
     """
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    amount = models.FloatField(null=True, blank=True)
     detail = models.ForeignKey(
         OrderDetail,
         null=True, blank=True,
         on_delete=models.CASCADE
     )
 
-    def __str__(self):
-        return f"ORDER ID: {self.id} - AMOUNT: {self.amount}"
+    @property
+    def amount(self):
+        # pylint: disable=missing-function-docstring
+        return self.detail.get_total_items_price
 
     class Meta:
         # pylint: disable=missing-class-docstring
