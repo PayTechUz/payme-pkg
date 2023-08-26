@@ -32,7 +32,7 @@ class ShippingDetail(models.Model):
     price = models.BigIntegerField(default=0)
 
     def __str__(self) -> str:
-        return f"[{self.pk}] {self.title} {self.price}"
+        return f"[{self.pk}] {self.title} - {self.price:,}"
 
 
 class Item(models.Model):
@@ -50,7 +50,7 @@ class Item(models.Model):
     vat_percent = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"[{self.id}] {self.title} ({self.count} pc.) x {self.price}"
+        return f"[{self.id}] {self.title} ({self.count} pc.) x {self.price:,}"
 
 
 class OrderDetail(models.Model):
@@ -69,12 +69,13 @@ class OrderDetail(models.Model):
     @property
     def get_items_display(self):
         # pylint: disable=missing-function-docstring
-        return ', '.join([items.title for items in self.items.all()[:2]])
+        return ', '.join([items.title for items in self.items.all()])
 
     @property
     def get_total_items_price(self) -> int:
         # pylint: disable=missing-function-docstring
-        return self.items.all().aggregate(
+        shipping_price = self.shipping.price if self.shipping else 0
+        return shipping_price + self.items.all().aggregate(
             total_price=models.Sum(
                 models.F('price') * models.F('count')
             )
@@ -116,6 +117,9 @@ class BaseOrder(models.Model, metaclass=DisallowOverrideMetaclass):
     def amount(self):
         # pylint: disable=missing-function-docstring
         return self.detail.get_total_items_price
+
+    def __str__(self):
+        return f"ORDER ID: {self.id} - AMOUNT: {self.amount:,}"
 
     class Meta:
         # pylint: disable=missing-class-docstring
