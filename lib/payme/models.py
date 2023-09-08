@@ -84,7 +84,8 @@ class OrderDetail(models.Model):
             order_id = orders[0].get('id') if orders else 'None'
 
             item_display.append(f'FOR ORDER - {order_id}')
-            if self.shipping: item_display.append(f'ADDRESS: {self.shipping.title}')
+            if self.shipping:
+                item_display.append(f'ADDRESS: {self.shipping.title}')
             item_display.append(f'AMOUNT: {self.get_total_items_price} UZS')
 
         return ' '.join(item_display)
