@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
                     auto_created=True, primary_key=True,
                     serialize=False, verbose_name='ID'
                 )),
-                ('discount', models.FloatField(blank=True, null=True)),
+                ('discount', models.BigIntegerField(blank=True, null=True)),
                 ('title', models.CharField(max_length=255)),
                 ('price', models.BigIntegerField(default=0)),
                 ('count', models.IntegerField(default=1)),
