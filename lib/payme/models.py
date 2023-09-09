@@ -50,7 +50,8 @@ class Item(models.Model):
     vat_percent = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"[{self.id}] {self.title} ({self.count} pc.) x {self.price:,} UZS"
+        item_price = self.price / 100  # item price in soum
+        return f"[{self.id}] {self.title} ({self.count} pc.) x {item_price:,} UZS"
 
 
 class OrderDetail(models.Model):
@@ -80,13 +81,14 @@ class OrderDetail(models.Model):
 
             related_order = fld.get_accessor_name()
             orders = getattr(self, related_order).values()
-
             order_id = orders[0].get('id') if orders else 'None'
 
             item_display.append(f'FOR ORDER - {order_id}')
+
             if self.shipping:
                 item_display.append(f'ADDRESS: {self.shipping.title}')
-            item_display.append(f'AMOUNT: {self.get_total_items_price} UZS')
+
+            item_display.append(f'AMOUNT: {self.get_total_items_price:,} UZS')
 
         return ' '.join(item_display)
 
@@ -109,10 +111,10 @@ class OrderDetail(models.Model):
             )
         )
         shipping_price = self.shipping.price if self.shipping else 0
-        return f"{shipping_price + items['total_price']:,}"
+        return int(shipping_price + items['total_price']) / 100
 
     def __str__(self) -> str:
-        return f"{self.get_items_display}"
+        return self.get_items_display
 
 
 class DisallowOverrideMetaclass(models.base.ModelBase):
@@ -149,7 +151,7 @@ class BaseOrder(models.Model, metaclass=DisallowOverrideMetaclass):
         return self.detail.get_total_items_price if self.detail else 0
 
     def __str__(self):
-        return f"ORDER ID: {self.id} - AMOUNT: {self.amount} UZS"
+        return f"ORDER ID: {self.id} - AMOUNT: {self.amount:,} UZS"
 
     class Meta:
         # pylint: disable=missing-class-docstring
