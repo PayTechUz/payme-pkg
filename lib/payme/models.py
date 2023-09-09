@@ -32,7 +32,8 @@ class ShippingDetail(models.Model):
     price = models.BigIntegerField(default=0)
 
     def __str__(self) -> str:
-        return f"[{self.pk}] {self.title} - {self.price:,}"
+        shipping_price = self.price / 100  # shipping price in soum
+        return f"[{self.pk}] {self.title} - {shipping_price:,}"
 
 
 class Item(models.Model):
