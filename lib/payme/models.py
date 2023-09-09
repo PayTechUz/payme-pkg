@@ -82,12 +82,12 @@ class OrderDetail(models.Model):
             related_order = fld.get_accessor_name()
             orders = getattr(self, related_order).values()
             order_id = orders[0].get('id') if orders else 'None'
-            
+
             item_display.append(f'FOR ORDER - {order_id}')
-            
+
             if self.shipping:
                 item_display.append(f'ADDRESS: {self.shipping.title}')
-                
+
             item_display.append(f'AMOUNT: {self.get_total_items_price:,} UZS')
 
         return ' '.join(item_display)
