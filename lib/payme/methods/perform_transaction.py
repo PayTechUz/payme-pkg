@@ -4,7 +4,7 @@ from django.db import DatabaseError
 
 from payme.utils.logging import logger
 from payme.utils.get_params import get_params
-from payme.models import MerchatTransactionsModel
+from payme.models import MerchantTransactionsModel
 from payme.serializers import MerchatTransactionsModelSerializer
 
 
@@ -26,7 +26,7 @@ class PerformTransaction:
         response: dict = None
         try:
             transaction = \
-                MerchatTransactionsModel.objects.get(
+                MerchantTransactionsModel.objects.get(
                     _id=clean_data.get("_id"),
                 )
             transaction.state = 2
