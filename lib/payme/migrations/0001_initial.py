@@ -26,6 +26,10 @@ class Migration(migrations.Migration):
                 ("package_code", models.CharField(max_length=255)),
                 ("vat_percent", models.IntegerField(blank=True, default=0, null=True)),
             ],
+            options={
+                "verbose_name": "Fiscal Data",
+                "verbose_name_plural": "Fiscal Data",
+            },
         ),
         migrations.CreateModel(
             name="MerchantTransactionsModel",
@@ -55,6 +59,10 @@ class Migration(migrations.Migration):
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
             ],
+            options={
+                "verbose_name": "Merchant Transaction",
+                "verbose_name_plural": "Merchant Transactions",
+            },
         ),
         migrations.CreateModel(
             name="ShippingDetail",
@@ -71,6 +79,10 @@ class Migration(migrations.Migration):
                 ("title", models.CharField(max_length=255)),
                 ("price", models.BigIntegerField(default=0)),
             ],
+            options={
+                "verbose_name": "Shipping Detail",
+                "verbose_name_plural": "Shipping Details",
+            },
         ),
         migrations.CreateModel(
             name="Item",
@@ -97,5 +109,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+            options={
+                "verbose_name": "Order Item",
+                "verbose_name_plural": "Order Items",
+            },
         ),
     ]
