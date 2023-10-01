@@ -38,4 +38,4 @@ except (ImportError, AttributeError):
 if not isinstance(CUSTOM_ORDER, models.base.ModelBase):
     raise TypeError("The input must be an instance of models.Model class")
 
-Order = CUSTOM_ORDER
+Order: models.Model = CUSTOM_ORDER
