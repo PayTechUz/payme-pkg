@@ -1,5 +1,6 @@
 [MASTER]
-disable=no-member,invalid-name,
+disable=no-member,
+        invalid-name,
         unnecessary-pass,
         useless-option-value,
         too-few-public-methods,
