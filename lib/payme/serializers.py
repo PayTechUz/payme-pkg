@@ -1,5 +1,3 @@
-import typing as t
-
 from django.conf import settings
 
 from payme.errors.exceptions import (
@@ -9,7 +7,7 @@ from payme.errors.exceptions import (
 from payme.models import MerchantTransactionsModel
 from payme.utils.get_params import get_params
 from payme.utils.logging import logger
-from payme.utils.order_finder import Order
+from payme.models import PaymeOrder as Order
 
 from rest_framework import serializers
 
@@ -88,77 +86,3 @@ class MerchatTransactionsModelSerializer(serializers.ModelSerializer):
         clean_data: dict = serializer.validated_data
 
         return clean_data
-
-
-class OrderModelSerializer(serializers.ModelSerializer):
-    """
-    OrderModelSerializer class \
-        That's used to serialize orders detail data.
-    """
-    class Meta:
-        # pylint: disable=missing-class-docstring
-        model = Order
-        depth = 2
-        exclude = ["id"]
-        read_only_fields = ["__all__"]
-
-    def clean_empty(self, data):
-        # pylint: disable=missing-function-docstring
-        if isinstance(data, dict):
-            return {
-                k: v
-                for k, v in ((k, self.clean_empty(v)) for k, v in data.items())
-                if v is not None and k != 'id'
-            }
-        if isinstance(data, list):
-            return [v for v in map(self.clean_empty, data) if v]
-
-        return data
-
-    def restructure_data(self, input_data: dict):
-        # pylint: disable=missing-function-docstring
-        result = {
-            "detail": {
-                key: value
-                for key, value in input_data.items()
-                if key in ["receipt_type", "shipping", "items"]
-            }
-        }
-
-        if "shipping" in input_data:
-            shipping: t.Dict[str, t.Any] = input_data["shipping"]
-            result["detail"]["shipping"] = {
-                key: value
-                for key, value in shipping.items()
-                if key in ["title", "price"]
-            }
-
-        if "items" in input_data:
-            items: t.List[t.Dict[str, t.Any]] = input_data["items"]
-            result["detail"]["items"] = []
-
-            for item in items:
-                new_item = {
-                    key: value
-                    for key, value in item.items()
-                    if key in ["discount", "title", "price", "count"]
-                }
-
-                if "fiscal_data" in item:
-                    fiscal_data: t.Dict[str, t.Any] = item["fiscal_data"]
-                    new_item.update(
-                        {
-                            key: value
-                            for key, value in fiscal_data.items()
-                            if key in ["code", "units", "vat_percent", "package_code"]
-                        }
-                    )
-
-                result["detail"]["items"].append(new_item)
-
-        return result
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        clean_data = self.clean_empty(ret)
-        return self.restructure_data(clean_data)
