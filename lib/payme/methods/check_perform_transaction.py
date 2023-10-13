@@ -1,9 +1,6 @@
-from payme.serializers import (
-    MerchatTransactionsModelSerializer,
-    OrderModelSerializer
-)
-from payme.utils.get_params import get_params
-from payme.utils.order_finder import Order
+from payme.models import PaymeOrder as Order
+from payme.serializers import MerchatTransactionsModelSerializer
+from payme.utils.get_params import clean_empty, get_params
 
 
 class CheckPerformTransaction:
@@ -22,20 +19,16 @@ class CheckPerformTransaction:
         )
         serializer.is_valid(raise_exception=True)
 
-        order = OrderModelSerializer(
-            instance=Order.objects.get(
-                id=serializer.validated_data.get('order_id')
-            )
+        order = Order.objects.get(
+            pk=serializer.validated_data.get('order_id')
         )
+        detail = clean_empty(order.to_detail())
 
         response = {
             "result": {
                 "allow": True,
-                "detail": order.data.get("detail")
+                "detail": detail
             }
         }
-
-        if not order.data.get("detail"):
-            del response["result"]["detail"]
 
         return None, response
