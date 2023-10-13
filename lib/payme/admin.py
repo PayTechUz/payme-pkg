@@ -1,15 +1,16 @@
 from django.contrib import admin
-
 from payme.models import (
-    FiscalData, Item, ShippingDetail,
-    MerchantTransactionsModel
+    FiscalData, MerchantTransactionsModel, PaymeItem,
+    PaymeOrder, ShippingDetail, OrderItem
 )
 
 admin.site.register(
     [
         MerchantTransactionsModel,
         FiscalData,
-        Item,
+        PaymeItem,
+        PaymeOrder,
+        OrderItem,
         ShippingDetail
     ]
 )
