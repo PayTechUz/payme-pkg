@@ -22,3 +22,19 @@ def get_params(params: dict) -> dict:
         clean_params["order_id"] = account[account_name]
 
     return clean_params
+
+
+def clean_empty(data) -> dict:
+    """
+    Use this function to clean the parameters from the instance.
+    """
+    if isinstance(data, dict):
+        return {
+            k: v
+            for k, v in ((k, clean_empty(v)) for k, v in data.items())
+            if v is not None and k != 'id'
+        }
+    if isinstance(data, list):
+        return [v for v in map(clean_empty, data) if v]
+
+    return data
