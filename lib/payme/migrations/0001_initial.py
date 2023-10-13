@@ -85,7 +85,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name="Item",
+            name="PaymeOrder",
             fields=[
                 (
                     "id",
@@ -96,10 +96,37 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("discount", models.BigIntegerField(blank=True, null=True)),
+                ("receipt_type", models.IntegerField(default=0)),
+                (
+                    "shipping",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="payme.shippingdetail",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Payme Order",
+                "verbose_name_plural": "Payme Orders",
+            },
+        ),
+        migrations.CreateModel(
+            name="PaymeItem",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("discount", models.BigIntegerField(default=0)),
                 ("title", models.CharField(max_length=255)),
                 ("price", models.BigIntegerField(default=0)),
-                ("count", models.IntegerField(default=1)),
                 (
                     "fiscal_data",
                     models.ForeignKey(
@@ -110,8 +137,43 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "Order Item",
-                "verbose_name_plural": "Order Items",
+                "verbose_name": "Payme Item",
+                "verbose_name_plural": "Payme Items",
+            },
+        ),
+        migrations.CreateModel(
+            name="OrderItem",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("count", models.IntegerField(default=1)),
+                (
+                    "item",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="payme.paymeitem",
+                    ),
+                ),
+                (
+                    "order",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="payme.paymeorder",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Payme Order Item",
+                "verbose_name_plural": "Payme Order Items",
             },
         ),
     ]
