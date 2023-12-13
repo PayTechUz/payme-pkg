@@ -1,13 +1,15 @@
 from django.conf import settings
 
-from rest_framework import serializers
-
-from payme.models import Order
-from payme.utils.logging import logger
-from payme.utils.get_params import get_params
+from payme.errors.exceptions import (
+    IncorrectAmount,
+    PerformTransactionDoesNotExist
+)
 from payme.models import MerchantTransactionsModel
-from payme.errors.exceptions import IncorrectAmount
-from payme.errors.exceptions import PerformTransactionDoesNotExist
+from payme.utils.get_params import get_params
+from payme.utils.logging import logger
+from payme.models import PaymeOrder as Order
+
+from rest_framework import serializers
 
 
 class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
@@ -24,7 +26,7 @@ class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
         fields: str = "__all__"
         extra_fields = ['start_date', 'end_date']
 
-    def validate(self, attrs) -> dict:
+    def validate(self, attrs: dict) -> dict:
         """
         Validate the data given to the MerchantTransactionsModel.
         """
@@ -47,12 +49,12 @@ class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
         Validator for Transactions Amount.
         """
         if amount is not None:
-            if int(amount) <= int(settings.PAYME.get("PAYME_MIN_AMOUNT", 0)):
+            if amount <= int(settings.PAYME.get("PAYME_MIN_AMOUNT")):
                 raise IncorrectAmount("Payment amount is less than allowed.")
 
         return amount
 
-    def validate_order_id(self, order_id) -> int:
+    def validate_order_id(self, order_id: int) -> int:
         """
         Use this method to check if a transaction is allowed to be executed.
 

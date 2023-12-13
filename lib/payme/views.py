@@ -55,7 +55,9 @@ class MerchantAPIView(APIView):
                 raise MethodNotFound() from error
 
             except PerformTransactionDoesNotExist as error:
-                logger.error("PerformTransactionDoesNotExist Error occurred: %s", error)
+                logger.error(
+                    "PerformTransactionDoesNotExist Error occurred: %s", error
+                )
                 raise PerformTransactionDoesNotExist() from error
 
             order_id, action = paycom_method(incoming_data.get("params"))

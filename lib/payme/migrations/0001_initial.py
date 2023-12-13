@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name
+import django.db.models.deletion
 from django.db import migrations, models
 
 
@@ -9,40 +10,170 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='MerchantTransactionsModel',
+            name="FiscalData",
             fields=[
-                ('id', models.BigAutoField(
-                    auto_created=True,
-                    primary_key=True,
-                    serialize=False,
-                    verbose_name='ID')
-                 ),
-                ('_id', models.CharField(max_length=255, null=True)),
-                ('transaction_id', models.CharField(max_length=255, null=True)),
-                ('order_id', models.BigIntegerField(blank=True, null=True)),
-                ('amount', models.FloatField(blank=True, null=True)),
-                ('time', models.BigIntegerField(blank=True, null=True)),
-                ('perform_time', models.BigIntegerField(default=0, null=True)),
-                ('cancel_time', models.BigIntegerField(default=0, null=True)),
-                ('state', models.IntegerField(default=1, null=True)),
-                ('reason', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_at_ms', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("code", models.CharField(max_length=17)),
+                ("units", models.IntegerField(blank=True, null=True)),
+                ("package_code", models.CharField(max_length=255)),
+                ("vat_percent", models.IntegerField(blank=True, default=0, null=True)),
             ],
+            options={
+                "verbose_name": "Fiscal Data",
+                "verbose_name_plural": "Fiscal Data",
+            },
         ),
         migrations.CreateModel(
-            name='Order',
+            name="MerchantTransactionsModel",
             fields=[
-                ('id', models.BigAutoField(
-                    auto_created=True,
-                    primary_key=True,
-                    serialize=False,
-                    verbose_name='ID')
-                 ),
-                ('amount', models.IntegerField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("_id", models.CharField(max_length=255, null=True)),
+                ("transaction_id", models.CharField(max_length=255, null=True)),
+                ("order_id", models.BigIntegerField(blank=True, null=True)),
+                ("amount", models.BigIntegerField(blank=True, null=True)),
+                ("time", models.BigIntegerField(blank=True, null=True)),
+                ("perform_time", models.BigIntegerField(default=0, null=True)),
+                ("cancel_time", models.BigIntegerField(default=0, null=True)),
+                ("state", models.IntegerField(default=1, null=True)),
+                ("reason", models.CharField(blank=True, max_length=255, null=True)),
+                (
+                    "created_at_ms",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
+            options={
+                "verbose_name": "Merchant Transaction",
+                "verbose_name_plural": "Merchant Transactions",
+            },
+        ),
+        migrations.CreateModel(
+            name="ShippingDetail",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("price", models.BigIntegerField(default=0)),
+            ],
+            options={
+                "verbose_name": "Shipping Detail",
+                "verbose_name_plural": "Shipping Details",
+            },
+        ),
+        migrations.CreateModel(
+            name="PaymeOrder",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("receipt_type", models.IntegerField(default=0)),
+                (
+                    "shipping",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="payme.shippingdetail",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Payme Order",
+                "verbose_name_plural": "Payme Orders",
+            },
+        ),
+        migrations.CreateModel(
+            name="PaymeItem",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("discount", models.BigIntegerField(default=0)),
+                ("title", models.CharField(max_length=255)),
+                ("price", models.BigIntegerField(default=0)),
+                (
+                    "fiscal_data",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="payme.fiscaldata",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Payme Item",
+                "verbose_name_plural": "Payme Items",
+            },
+        ),
+        migrations.CreateModel(
+            name="OrderItem",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("count", models.IntegerField(default=1)),
+                (
+                    "item",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="payme.paymeitem",
+                    ),
+                ),
+                (
+                    "order",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="payme.paymeorder",
+                    ),
+                ),
+            ],
+            options={
+                "verbose_name": "Payme Order Item",
+                "verbose_name_plural": "Payme Order Items",
+            },
         ),
     ]
