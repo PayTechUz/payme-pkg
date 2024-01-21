@@ -31,11 +31,20 @@ class ReceiptsTest(BaseTestCase):
     def test_receipts_pay(self) -> None:
         with mock.patch(
             "payme.receipts.subscribe_receipts.PaymeSubscribeReceipts.receipts_pay",
-            return_value={"result": {"receipt": {
-                "card": {"expire": "9903", "number": "860006******6311"}, "amount": 10000, "payer": {
-                    "phone": "998901304527"
+            return_value={
+                "result": {
+                    "receipt": {
+                        "card": {
+                            "expire": "9903",
+                            "number": "860006******6311"
+                        },
+                        "amount": 10000,
+                        "payer": {
+                            "phone": "998901304527"
+                        }
+                    }
                 }
-            }}}
+            }
         ):
             response = self.receipts_client.receipts_pay(
                 invoice_id="mocked_invoice_id",
@@ -68,11 +77,20 @@ class ReceiptsTest(BaseTestCase):
     def test_receipts_get(self) -> None:
         with mock.patch(
             "payme.receipts.subscribe_receipts.PaymeSubscribeReceipts.receipts_get",
-            return_value={"result": {"receipt": {
-                "card": {"expire": "9903", "number": "860006******6311"}, "amount": 10000, "payer": {
-                    "phone": "998901304527"
+            return_value={
+                "result": {
+                    "receipt": {
+                        "card": {
+                            "expire": "9903",
+                            "number": "860006******6311"
+                        },
+                        "amount": 10000,
+                        "payer": {
+                            "phone": "998901304527"
+                        }
+                    }
                 }
-            }}}
+            }
         ):
             response = self.receipts_client.receipts_get(
                 invoice_id="mocked_invoice_id",
