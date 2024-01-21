@@ -18,10 +18,9 @@ class CreateTransaction:
     -------------------------
     https://developer.help.paycom.uz/metody-merchant-api/createtransaction
     """
+
     def __call__(self, params: dict) -> tuple:
-        serializer = MerchantTransactionsModelSerializer(
-            data=get_params(params)
-        )
+        serializer = MerchantTransactionsModelSerializer(data=get_params(params))
         serializer.is_valid(raise_exception=True)
         order_id = serializer.validated_data.get("order_id")
 
@@ -39,14 +38,13 @@ class CreateTransaction:
             raise TooManyRequests() from error
 
         if transaction is None:
-            transaction, _ = \
-                MerchantTransactionsModel.objects.get_or_create(
-                    _id=serializer.validated_data.get('_id'),
-                    order_id=serializer.validated_data.get('order_id'),
-                    transaction_id=uuid.uuid4(),
-                    amount=serializer.validated_data.get('amount'),
-                    created_at_ms=int(time.time() * 1000),
-                )
+            transaction, _ = MerchantTransactionsModel.objects.get_or_create(
+                _id=serializer.validated_data.get("_id"),
+                order_id=serializer.validated_data.get("order_id"),
+                transaction_id=uuid.uuid4(),
+                amount=serializer.validated_data.get("amount"),
+                created_at_ms=int(time.time() * 1000),
+            )
 
         if transaction:
             response: dict = {
@@ -61,8 +59,7 @@ class CreateTransaction:
 
     @staticmethod
     def _convert_ms_to_datetime(time_ms: int) -> datetime:
-        """Use this format to convert from time ms to datetime format.
-        """
+        """Use this format to convert from time ms to datetime format."""
         readable_datetime = datetime.datetime.fromtimestamp(time_ms / 1000)
 
         return readable_datetime

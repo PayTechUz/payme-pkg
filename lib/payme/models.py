@@ -6,6 +6,7 @@ class MerchantTransactionsModel(models.Model):
     MerchantTransactionsModel class \
         That's used for managing transactions in database.
     """
+
     _id = models.CharField(max_length=255, null=True, blank=False)
     transaction_id = models.CharField(max_length=255, null=True, blank=False)
     order_id = models.BigIntegerField(null=True, blank=True)
@@ -33,6 +34,7 @@ class ShippingDetail(models.Model):
     ShippingDetail class \
         That's used for managing shipping
     """
+
     title = models.CharField(max_length=255)
     price = models.BigIntegerField(default=0)
 
@@ -51,6 +53,7 @@ class FiscalData(models.Model):
     FiscalData class \
         That's used for managing fiscalization items
     """
+
     code = models.CharField(max_length=17)
     units = models.IntegerField(null=True, blank=True)
     package_code = models.CharField(max_length=255)
@@ -70,13 +73,11 @@ class PaymeItem(models.Model):
     Item class \
         That's used for managing order items
     """
+
     discount = models.BigIntegerField(default=0)
     title = models.CharField(max_length=255)
     price = models.BigIntegerField(default=0)
-    fiscal_data = models.ForeignKey(
-        FiscalData, null=True,
-        on_delete=models.SET_NULL
-    )
+    fiscal_data = models.ForeignKey(FiscalData, null=True, on_delete=models.SET_NULL)
 
     def __str__(self) -> str:
         item_price = self.price / 100  # item price in soum
@@ -93,11 +94,10 @@ class PaymeOrder(models.Model):
     Order class \
         That's used for managing order process
     """
+
     receipt_type = models.IntegerField(default=0)
     shipping = models.ForeignKey(
-        to=ShippingDetail,
-        null=True, blank=True,
-        on_delete=models.CASCADE
+        to=ShippingDetail, null=True, blank=True, on_delete=models.CASCADE
     )
 
     @property
@@ -121,11 +121,10 @@ class PaymeOrder(models.Model):
         orderitems = self.orderitem_set.all()
         return {
             "receipt_type": self.receipt_type,
-            "shipping": {
-                'title': self.shipping.title,
-                'price': self.shipping.price
-            } if self.shipping else None,
-            "items": [item.item_as_dict for item in orderitems]
+            "shipping": {"title": self.shipping.title, "price": self.shipping.price}
+            if self.shipping
+            else None,
+            "items": [item.item_as_dict for item in orderitems],
         }
 
     def __str__(self):
@@ -142,6 +141,7 @@ class OrderItem(models.Model):
     Order Item class \
         That's used for managing order items process
     """
+
     item = models.ForeignKey(PaymeItem, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(PaymeOrder, on_delete=models.SET_NULL, null=True)
     count = models.IntegerField(default=1)
@@ -152,22 +152,26 @@ class OrderItem(models.Model):
 
     @property
     def item_as_dict(self):
-        fiscal_data = {
-            'code': self.item.fiscal_data.code,
-            'units': self.item.fiscal_data.units,
-            'package_code': self.item.fiscal_data.package_code,
-            'vat_percent': self.item.fiscal_data.vat_percent
-        } if self.item.fiscal_data else {}
+        fiscal_data = (
+            {
+                "code": self.item.fiscal_data.code,
+                "units": self.item.fiscal_data.units,
+                "package_code": self.item.fiscal_data.package_code,
+                "vat_percent": self.item.fiscal_data.vat_percent,
+            }
+            if self.item.fiscal_data
+            else {}
+        )
 
         return {
-            'discount': self.item.discount,
-            'title': self.item.title,
-            'count': self.count,
-            'price': self.item.price,
-            'code': fiscal_data.get('code'),
-            'units': fiscal_data.get('units'),
-            'package_code': fiscal_data.get('package_code'),
-            'vat_percent': fiscal_data.get('vat_percent')
+            "discount": self.item.discount,
+            "title": self.item.title,
+            "count": self.count,
+            "price": self.item.price,
+            "code": fiscal_data.get("code"),
+            "units": fiscal_data.get("units"),
+            "package_code": fiscal_data.get("package_code"),
+            "vat_percent": fiscal_data.get("vat_percent"),
         }
 
     def __str__(self):

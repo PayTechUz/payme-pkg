@@ -32,7 +32,7 @@ def clean_empty(data) -> dict:
         return {
             k: v
             for k, v in ((k, clean_empty(v)) for k, v in data.items())
-            if v is not None and k != 'id'
+            if v is not None and k != "id"
         }
     if isinstance(data, list):
         return [v for v in map(clean_empty, data) if v]

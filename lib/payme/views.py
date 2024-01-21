@@ -25,6 +25,7 @@ class MerchantAPIView(APIView):
     """
     MerchantAPIView class provides payme call back functionality.
     """
+
     permission_classes = ()
     authentication_classes = ()
 
@@ -39,7 +40,7 @@ class MerchantAPIView(APIView):
             - CheckTransaction
             - GetStatement
         """
-        password = request.META.get('HTTP_AUTHORIZATION')
+        password = request.META.get("HTTP_AUTHORIZATION")
         if self.authorize(password):
             incoming_data: dict = request.data
             incoming_method: str = incoming_data.get("method")
@@ -55,9 +56,7 @@ class MerchantAPIView(APIView):
                 raise MethodNotFound() from error
 
             except PerformTransactionDoesNotExist as error:
-                logger.error(
-                    "PerformTransactionDoesNotExist Error occurred: %s", error
-                )
+                logger.error("PerformTransactionDoesNotExist Error occurred: %s", error)
                 raise PerformTransactionDoesNotExist() from error
 
             order_id, action = paycom_method(incoming_data.get("params"))
@@ -93,7 +92,7 @@ class MerchantAPIView(APIView):
             "PerformTransaction": PerformTransaction,
             "CancelTransaction": CancelTransaction,
             "CheckTransaction": CheckTransaction,
-            "GetStatement": GetStatement
+            "GetStatement": GetStatement,
         }
 
         try:
@@ -124,19 +123,19 @@ class MerchantAPIView(APIView):
         password = password.split()[-1]
 
         try:
-            password = base64.b64decode(password).decode('utf-8')
+            password = base64.b64decode(password).decode("utf-8")
         except (binascii.Error, UnicodeDecodeError) as error:
             error_message = "Error when authorize request to merchant!"
             logger.error(error_message)
 
             raise PermissionDenied(error_message=error_message) from error
 
-        merchant_key = password.split(':')[-1]
+        merchant_key = password.split(":")[-1]
 
-        if merchant_key == settings.PAYME.get('PAYME_KEY'):
+        if merchant_key == settings.PAYME.get("PAYME_KEY"):
             is_payme = True
 
-        if merchant_key != settings.PAYME.get('PAYME_KEY'):
+        if merchant_key != settings.PAYME.get("PAYME_KEY"):
             logger.error("Invalid key in request!")
 
         if is_payme is False:

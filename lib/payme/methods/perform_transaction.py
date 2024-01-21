@@ -17,18 +17,16 @@ class PerformTransaction:
     -------------------------
     https://developer.help.paycom.uz/metody-merchant-api/performtransaction
     """
+
     def __call__(self, params: dict) -> tuple:
-        serializer = MerchantTransactionsModelSerializer(
-            data=get_params(params)
-        )
+        serializer = MerchantTransactionsModelSerializer(data=get_params(params))
         serializer.is_valid(raise_exception=True)
         clean_data: dict = serializer.validated_data
         response: dict = None
         try:
-            transaction = \
-                MerchantTransactionsModel.objects.get(
-                    _id=clean_data.get("_id"),
-                )
+            transaction = MerchantTransactionsModel.objects.get(
+                _id=clean_data.get("_id"),
+            )
             transaction.state = 2
             if transaction.perform_time == 0:
                 transaction.perform_time = int(time.time() * 1000)

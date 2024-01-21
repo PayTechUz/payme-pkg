@@ -12,22 +12,14 @@ class CheckPerformTransaction:
     -------------------------
     https://developer.help.paycom.uz/metody-merchant-api/checktransaction
     """
+
     def __call__(self, params: dict) -> tuple:
-        serializer = MerchantTransactionsModelSerializer(
-            data=get_params(params)
-        )
+        serializer = MerchantTransactionsModelSerializer(data=get_params(params))
         serializer.is_valid(raise_exception=True)
 
-        order = Order.objects.get(
-            pk=serializer.validated_data.get('order_id')
-        )
+        order = Order.objects.get(pk=serializer.validated_data.get("order_id"))
         detail = clean_empty(order.to_detail())
 
-        response = {
-            "result": {
-                "allow": True,
-                "detail": detail
-            }
-        }
+        response = {"result": {"allow": True, "detail": detail}}
 
         return None, response
