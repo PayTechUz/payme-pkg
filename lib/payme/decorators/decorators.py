@@ -13,6 +13,7 @@ def payme_request(func):
     """
     Payme request decorator.
     """
+
     @functools.wraps(func)
     def wrapper(self, data):
         response = None

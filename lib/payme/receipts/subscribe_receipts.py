@@ -19,16 +19,10 @@ class PaymeSubscribeReceipts:
     """
 
     def __init__(
-        self,
-        base_url: str,
-        paycom_id: str,
-        paycom_key: str,
-        timeout: int = 5
+        self, base_url: str, paycom_id: str, paycom_key: str, timeout: int = 5
     ) -> "PaymeSubscribeReceipts":
         self.base_url: str = base_url
-        self.headers: dict = {
-            "X-Auth": f"{paycom_id}:{paycom_key}"
-        }
+        self.headers: dict = {"X-Auth": f"{paycom_id}:{paycom_key}"}
         self.__methods: dict = {
             "receipts_get": "receipts.get",
             "receipts_pay": "receipts.pay",
@@ -74,8 +68,8 @@ class PaymeSubscribeReceipts:
                 "amount": amount,
                 "account": {
                     "order_id": order_id,
-                }
-            }
+                },
+            },
         }
         return self.__request(to_json(**data))
 
@@ -100,8 +94,8 @@ class PaymeSubscribeReceipts:
                 "token": token,
                 "payer": {
                     "phone": phone,
-                }
-            }
+                },
+            },
         }
         return self.__request(to_json(**data))
 
@@ -119,11 +113,8 @@ class PaymeSubscribeReceipts:
         https://developer.help.paycom.uz/metody-subscribe-api/receipts.send
         """
         data: dict = {
-            "method": self.__methods.get('receipts_send'),
-            "params": {
-                "id": invoice_id,
-                "phone": phone
-            }
+            "method": self.__methods.get("receipts_send"),
+            "params": {"id": invoice_id, "phone": phone},
         }
         return self.__request(to_json(**data))
 
@@ -140,10 +131,8 @@ class PaymeSubscribeReceipts:
         https://developer.help.paycom.uz/metody-subscribe-api/receipts.cancel
         """
         data: dict = {
-            "method": self.__methods.get('receipts_cancel'),
-            "params": {
-                "id": invoice_id
-            }
+            "method": self.__methods.get("receipts_cancel"),
+            "params": {"id": invoice_id},
         }
 
         return self.__request(to_json(**data))
@@ -161,10 +150,8 @@ class PaymeSubscribeReceipts:
         https://developer.help.paycom.uz/metody-subscribe-api/receipts.check
         """
         data: dict = {
-            "method": self.__methods.get('receipts_check'),
-            "params": {
-                "id": invoice_id
-            }
+            "method": self.__methods.get("receipts_check"),
+            "params": {"id": invoice_id},
         }
 
         return self.__request(to_json(**data))
@@ -182,10 +169,8 @@ class PaymeSubscribeReceipts:
         https://developer.help.paycom.uz/metody-subscribe-api/receipts.get
         """
         data: dict = {
-            "method": self.__methods.get('receipts_get'),
-            "params": {
-                "id": invoice_id
-            }
+            "method": self.__methods.get("receipts_get"),
+            "params": {"id": invoice_id},
         }
 
         return self.__request(to_json(**data))
@@ -206,12 +191,7 @@ class PaymeSubscribeReceipts:
         https://developer.help.paycom.uz/metody-subscribe-api/receipts.get_all
         """
         data: dict = {
-            "method": self.__methods.get('receipts_get_all'),
-            "params": {
-                "count": count,
-                "from": _from,
-                "to": _to,
-                "offset": offset
-            }
+            "method": self.__methods.get("receipts_get_all"),
+            "params": {"count": count, "from": _from, "to": _to, "offset": offset},
         }
         return self.__request(to_json(**data))

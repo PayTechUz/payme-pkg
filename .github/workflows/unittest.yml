@@ -32,6 +32,13 @@ jobs:
           pip install -r requirements/dev-requirements.txt
           pip install -r requirements/requirements.txt
 
+      - name: Create a django project
+        run: |
+          cd lib
+          django-admin startproject core .
+        working-directory: ${{ github.workspace }}
+
       - name: Run unit tests
         run: |
-          python payme_test.py
+          python manage.py test
+        working-directory: lib

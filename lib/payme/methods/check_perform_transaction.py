@@ -1,5 +1,6 @@
-from payme.utils.get_params import get_params
+from payme.models import PaymeOrder as Order
 from payme.serializers import MerchantTransactionsModelSerializer
+from payme.utils.get_params import clean_empty, get_params
 
 
 class CheckPerformTransaction:
@@ -11,16 +12,14 @@ class CheckPerformTransaction:
     -------------------------
     https://developer.help.paycom.uz/metody-merchant-api/checktransaction
     """
+
     def __call__(self, params: dict) -> tuple:
-        serializer = MerchantTransactionsModelSerializer(
-            data=get_params(params)
-        )
+        serializer = MerchantTransactionsModelSerializer(data=get_params(params))
         serializer.is_valid(raise_exception=True)
 
-        response = {
-            "result": {
-                "allow": True,
-                }
-            }
+        order = Order.objects.get(pk=serializer.validated_data.get("order_id"))
+        detail = clean_empty(order.to_detail())
+
+        response = {"result": {"allow": True, "detail": detail}}
 
         return None, response

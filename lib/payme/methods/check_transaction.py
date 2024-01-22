@@ -14,16 +14,14 @@ class CheckTransaction:
     -------------------------
     https://developer.help.paycom.uz/metody-merchant-api/checkperformtransaction
     """
+
     def __call__(self, params: dict) -> tuple:
-        clean_data: dict = MTMS.get_validated_data(
-            params=params
-        )
+        clean_data: dict = MTMS.get_validated_data(params=params)
 
         try:
-            transaction = \
-                MerchantTransactionsModel.objects.get(
-                    _id=clean_data.get("_id"),
-                )
+            transaction = MerchantTransactionsModel.objects.get(
+                _id=clean_data.get("_id"),
+            )
             response = {
                 "result": {
                     "create_time": int(transaction.created_at_ms),

@@ -12,10 +12,6 @@ def make_aware_datetime(start_date: int, end_date: int):
     :return: A tuple of two aware datetimes
     """
     return map(
-        lambda timestamp: make_aware(
-            dt.fromtimestamp(
-                timestamp / 1000
-            )
-        ),
-        [start_date, end_date]
+        lambda timestamp: make_aware(dt.fromtimestamp(timestamp / 1000)),
+        [start_date, end_date],
     )

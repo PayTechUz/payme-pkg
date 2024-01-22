@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='payme-pkg',
-    version='2.6.6',
+    version='3.0.1',
     license='MIT',
     author="Muhammadali Akbarov",
     author_email='muhammadali17abc@gmail.com',
@@ -15,5 +15,6 @@ setup(
         'requests==2.*',
         "dataclasses==0.*;python_version<'3.7'",  # will only install on py3.6
         'djangorestframework==3.14.0'
-      ],
+        'websocket-client==1.6.1'
+    ],
 )
