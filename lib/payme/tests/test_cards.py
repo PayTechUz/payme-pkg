@@ -1,5 +1,5 @@
 from unittest import mock
-from tests.base import BaseTestCase
+from payme.tests.base import BaseTestCase
 
 
 class SubscribeCardsTest(BaseTestCase):
