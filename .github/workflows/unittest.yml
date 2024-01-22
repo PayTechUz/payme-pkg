@@ -38,10 +38,6 @@ jobs:
           django-admin startproject core .
         working-directory: ${{ github.workspace }}
 
-      - name: Add Payme to INSTALLED_APPS
-        run: python add_app.py payme lib
-        working-directory: ${{ github.workspace }}
-
       - name: Run unit tests
         run: |
           python manage.py test
