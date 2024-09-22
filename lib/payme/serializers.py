@@ -15,6 +15,7 @@ class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
     MerchantTransactionsModelSerializer class \
         That's used to serialize merchant transactions data.
     """
+
     start_date = serializers.IntegerField(allow_null=True)
     end_date = serializers.IntegerField(allow_null=True)
 
@@ -22,7 +23,7 @@ class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
         # pylint: disable=missing-class-docstring
         model: MerchantTransactionsModel = MerchantTransactionsModel
         fields: str = "__all__"
-        extra_fields = ['start_date', 'end_date']
+        extra_fields = ["start_date", "end_date"]
 
     def validate(self, attrs) -> dict:
         """
@@ -30,14 +31,12 @@ class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
         """
         if attrs.get("order_id") is not None:
             try:
-                order = Order.objects.get(
-                    id=attrs['order_id']
-                )
-                if order.amount != int(attrs['amount']):
+                order = Order.objects.get(id=attrs["order_id"])
+                if order.amount != int(attrs["amount"]):
                     raise IncorrectAmount()
 
             except IncorrectAmount as error:
-                logger.error("Invalid amount for order: %s", attrs['order_id'])
+                logger.error("Invalid amount for order: %s", attrs["order_id"])
                 raise IncorrectAmount() from error
 
         return attrs
@@ -77,9 +76,7 @@ class MerchantTransactionsModelSerializer(serializers.ModelSerializer):
         ----------
         params: dict — Includes request params.
         """
-        serializer = MerchantTransactionsModelSerializer(
-            data=get_params(params)
-        )
+        serializer = MerchantTransactionsModelSerializer(data=get_params(params))
         serializer.is_valid(raise_exception=True)
         clean_data: dict = serializer.validated_data
 

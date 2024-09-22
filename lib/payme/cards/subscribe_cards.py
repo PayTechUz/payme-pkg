@@ -17,11 +17,9 @@ class PaymeSubscribeCards:
     -------------------------
     https://developer.help.paycom.uz/metody-subscribe-api/
     """
+
     def __init__(
-        self,
-        base_url: str,
-        paycom_id: str,
-        timeout=5
+        self, base_url: str, paycom_id: str, timeout=5
     ) -> "PaymeSubscribeCards":
         self.base_url: str = base_url
         self.timeout: int = timeout
@@ -78,7 +76,7 @@ class PaymeSubscribeCards:
                     "expire": expire,
                 },
                 "save": save,
-            }
+            },
         }
         return self.__request(to_json(**data))
 
@@ -95,10 +93,10 @@ class PaymeSubscribeCards:
         https://developer.help.paycom.uz/metody-subscribe-api/cards.get_verify_code
         """
         data: dict = {
-            "method": self.__methods.get('cards_get_verify_code'),
+            "method": self.__methods.get("cards_get_verify_code"),
             "params": {
                 "token": token,
-            }
+            },
         }
         return self.__request(to_json(**data))
 
@@ -117,10 +115,7 @@ class PaymeSubscribeCards:
         """
         data: dict = {
             "method": self.__methods.get("cards_verify"),
-            "params": {
-                "token": token,
-                "code": verify_code
-            }
+            "params": {"token": token, "code": verify_code},
         }
         return self.__request(to_json(**data))
 
@@ -140,7 +135,7 @@ class PaymeSubscribeCards:
             "method": self.__methods.get("cards_check"),
             "params": {
                 "token": token,
-            }
+            },
         }
 
         return self.__request(to_json(**data))
@@ -161,6 +156,6 @@ class PaymeSubscribeCards:
             "method": self.__methods.get("cards_remove"),
             "params": {
                 "token": token,
-            }
+            },
         }
         return self.__request(to_json(**data))
