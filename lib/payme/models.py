@@ -12,16 +12,27 @@ class MerchantTransactionsModel(models.Model):
     MerchantTransactionsModel class \
         That's used for managing transactions in database.
     """
+
     _id = models.CharField(max_length=255, null=True, blank=False)
-    transaction_id = models.CharField(max_length=255, null=True, blank=False, verbose_name=_("Transaction ID"))
+    transaction_id = models.CharField(
+        max_length=255, null=True, blank=False, verbose_name=_("Transaction ID")
+    )
     order_id = models.BigIntegerField(null=True, blank=True, verbose_name=_("Order ID"))
     amount = models.FloatField(null=True, blank=True, verbose_name=_("Amount"))
     time = models.BigIntegerField(null=True, blank=True, verbose_name=_("Time"))
-    perform_time = models.BigIntegerField(null=True, default=0, verbose_name=_("Perform Time"))
-    cancel_time = models.BigIntegerField(null=True, default=0, verbose_name=_("Cancel Time"))
+    perform_time = models.BigIntegerField(
+        null=True, default=0, verbose_name=_("Perform Time")
+    )
+    cancel_time = models.BigIntegerField(
+        null=True, default=0, verbose_name=_("Cancel Time")
+    )
     state = models.IntegerField(null=True, default=1, verbose_name=_("State"))
-    reason = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Reason"))
-    created_at_ms = models.CharField(max_length=255, null=True, blank=True, verbose_name=_("Created At MS"))
+    reason = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Reason")
+    )
+    created_at_ms = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Created At MS")
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"))
 
@@ -40,7 +51,7 @@ try:
         raise TypeError("The input must be an instance of models.Model class")
 
     # pylint: disable=protected-access
-    if 'amount' not in [f.name for f in CUSTOM_ORDER._meta.fields]:
+    if "amount" not in [f.name for f in CUSTOM_ORDER._meta.fields]:
         raise FieldError("Missing 'amount' field in your custom order model")
 
     Order = CUSTOM_ORDER
@@ -54,8 +65,11 @@ except (ImportError, AttributeError):
         Order class \
             That's used for managing order process
         """
+
         amount = models.IntegerField(null=True, blank=True, verbose_name=_("Amount"))
-        created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Created At"))
+        created_at = models.DateTimeField(
+            auto_now_add=True, verbose_name=_("Created At")
+        )
         updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Updated At"))
 
         def __str__(self):

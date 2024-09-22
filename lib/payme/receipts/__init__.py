@@ -1,1 +1,1 @@
-from .import subscribe_receipts
+from . import subscribe_receipts

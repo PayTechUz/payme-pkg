@@ -20,15 +20,14 @@ class CancelTransaction:
 
     @transaction.atomic
     def __call__(self, params: dict):
-        clean_data: dict = MTMS.get_validated_data(
-            params=params
-        )
+        clean_data: dict = MTMS.get_validated_data(params=params)
         try:
             with transaction.atomic():
-                transactions: MerchantTransactionsModel = \
+                transactions: MerchantTransactionsModel = (
                     MerchantTransactionsModel.objects.filter(
-                        _id=clean_data.get('_id'),
+                        _id=clean_data.get("_id"),
                     ).first()
+                )
                 if transactions.cancel_time == 0:
                     transactions.cancel_time = int(time.time() * 1000)
                 if transactions.perform_time == 0:
