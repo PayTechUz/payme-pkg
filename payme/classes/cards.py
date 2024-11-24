@@ -19,18 +19,21 @@ class Cards:
     services. It allows you to create new cards and retrieve verification
     codes for existing cards.
     """
-    def __init__(self, url: str, payme_id: str) -> "Cards":
+    def __init__(self, url: str, payme_id: str, **extra_kwargs) -> "Cards":
         """
         Initialize the Cards client.
 
         :param payme_id: The Paycom ID used for authentication.
         :param url: The base URL for the Paycom card service API.
+        :param extra_kwargs: Additional keyword arguments to be passed to the Cards client.
         """
         headers = {
             "X-Auth": payme_id,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            **extra_kwargs.get("headers", {}),
         }
         self.http = HttpClient(url, headers)
+        self.extra_kwargs = extra_kwargs
 
     def create(self, number: str, expire: str, save: bool = False,
                timeout: int = 10) -> response.CardsCreateResponse:

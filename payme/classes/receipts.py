@@ -20,21 +20,24 @@ class Receipts:
     """
     The Receipts class provides methods to interact with the Payme Receipts.
     """
-    def __init__(self, payme_id: str, payme_key: str, url: str) -> "Receipts":
+    def __init__(self, payme_id: str, payme_key: str, url: str, **extra_kwargs) -> "Receipts":
         """
         Initialize the Receipts client.
 
         :param payme_id: The Payme ID associated with your account.
         :param payme_key: The Payme API key associated with your account.
         :param url: The base URL for the Payme Receipts API.
+        :param extra_kwargs: Additional keyword arguments to be passed to the Receipts client.
         """
         self.__cards = Cards(url, payme_id)
 
         headers = {
             "X-Auth": f"{payme_id}:{payme_key}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            **extra_kwargs.get("headers", {}),
         }
         self.http = HttpClient(url, headers)
+        self.extra_kwargs = extra_kwargs
 
     def create(
         self,
