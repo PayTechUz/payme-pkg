@@ -14,15 +14,19 @@ INSTALLED_APPS: List[str] = [
     "django.contrib.contenttypes",
     "payme",
     "test",
+    "pytest_django",
 ]
 
 DATABASES: Dict[str, Dict[str, Any]] = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "TEST": {
+            "NAME": os.path.join(BASE_DIR, "test_db.sqlite3"),  # Configure test database
+        },
     }
 }
 
-PAYME_ACCOUNT_MODEL: str = "test.test_models.models.Order"
+PAYME_ACCOUNT_MODEL: str = "test.models.Order"
 
 DEFAULT_AUTO_FIELD: str = "django.db.models.BigAutoField"

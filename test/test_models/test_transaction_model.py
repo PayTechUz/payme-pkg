@@ -1,19 +1,25 @@
-import unittest
+import pytest
+from django.core.management import call_command
+from payme.models import PaymeTransactions
+from test.models import Order  # Import the Order model
 
-from payme.models import Transaction
+@pytest.mark.django_db(transaction=True)
+def test_create_transaction():
+    order = Order.objects.create(
+        customer_name="John Doe",
+        address="123 Main St",
+        total_cost=150,
+        payment_method="Credit Card",
+        is_paid=True
+    )
+    transaction = PaymeTransactions.objects.create(
+        transaction_id="12345",
+        account=order,  # Add the account field
+        amount=100.00,
+        state=PaymeTransactions.CREATED
+    )
 
-class TestTransactionModel(unittest.TestCase):
-    def test_transaction_model(self):
-        transaction = Transaction(
-            amount=100,
-            currency='USD',
-            status='pending'
-        )
-        self.assertEqual(transaction.amount, 100)
-        self.assertEqual(transaction.currency, 'USD')
-        self.assertEqual(transaction.status, 'pending')
-
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert transaction.transaction_id == "12345"
+    assert transaction.amount == 100.00
+    assert transaction.state == PaymeTransactions.CREATED
+    assert transaction.account == order  # Assert the account field
