@@ -2,6 +2,8 @@
 env/
 venv/
 .env
+.venv/
+.pytest_cache
 
 # dev test
 core/
