@@ -20,12 +20,12 @@ def create_order() -> Type[Order]:
         is_paid=True
     )
 
-def create_transaction(order: Type[Order]) -> Type[PaymeTransactions]:
+def create_transaction(order: Type[Order], id: str="12345") -> Type[PaymeTransactions]:
     """
     Helper method to create a new transaction object.
     """
     return PaymeTransactions.objects.create(
-        transaction_id="12345",
+        transaction_id=id,
         account=order,
         amount=100.00,
         state=PaymeTransactions.CREATED
@@ -106,7 +106,7 @@ class TestTransactionModel:
            )
             
     @pytest.mark.django_db(transaction=True)
-    def test_string_represetation_of_transaction(self) -> None:
+    def test_string_representation_of_transaction(self) -> None:
         """
         Test the string representation of a transaction.
         """
@@ -184,3 +184,4 @@ class TestTransactionModel:
 
         assert transaction.is_cancelled()
         assert transaction.state == PaymeTransactions.CANCELED
+
