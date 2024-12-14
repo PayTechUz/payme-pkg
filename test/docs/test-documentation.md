@@ -46,3 +46,38 @@ This is a test documentation file. It contains information about the test cases 
     - Verify that creating a transaction with a negative amount raises an error.
 21. Test creating a transaction with a very large amount
     - Ensure that creating a transaction with a very large amount is handled correctly.
+
+## Integration test for model
+
+1. Test creating a new payment transaction
+   - Verify that a new payment transaction can be created with valid data.
+   - Ensure that the transaction is saved in the database.
+   - Check that the transaction can be retrieved from the database.
+   - Confirm that the retrieved transaction has the correct data.
+   - Ensure that the transaction can be updated.
+   - Verify that the updated transaction is saved in the database.
+   - Check that the updated transaction can be retrieved from the database.
+   - Confirm that the updated transaction has the correct data.
+   - Ensure that the transaction can be deleted.
+   - Verify that the deleted transaction is no longer in the database.
+   - Check that trying to retrieve the deleted transaction raises an error.
+   - Confirm that the transaction cannot be updated after deletion.
+   - Ensure that the transaction cannot be deleted again.
+
+2. Test creating a new payment transaction with invalid data
+   - Ensure that creating a payment transaction with invalid data raises appropriate errors.
+   - Verify that the transaction is not saved in the database.
+   - Check that trying to retrieve the non-existent transaction raises an error.
+   - Confirm that the transaction cannot be updated.
+   - Ensure that the transaction cannot be deleted.
+
+3. Test creating a transaction with a duplicate transaction ID
+   - Ensure that creating a transaction with a duplicate transaction ID raises an error.
+   - Verify that the first transaction is saved in the database.
+   - Check that the second transaction is not saved in the database.
+   - Confirm that the first transaction can be retrieved from the database.
+   - Ensure that the second transaction cannot be retrieved from the database.
+   - Verify that the first transaction can be updated.
+   - Check that the second transaction cannot be updated.
+   - Confirm that the first transaction can be deleted.
+   - Ensure that the second transaction cannot be deleted.
