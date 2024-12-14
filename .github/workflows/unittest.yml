@@ -18,6 +18,7 @@ jobs:
     env:
       PAYME_ID: ${{ secrets.PAYME_ID }}
       PAYME_KEY: ${{ secrets.PAYME_KEY }}
+      DJANGO_SETTINGS_MODULE: test.settings
 
     steps:
       - uses: actions/checkout@v2
@@ -41,8 +42,15 @@ jobs:
         run: |
           # No setup needed for SQLite
           echo "Using SQLite database"
+      - name: Create temporary manage.py
+        run: |
+          echo "from django.core.management import execute_from_command_line" > manage.py
+          echo "import sys" >> manage.py
+          echo "if __name__ == '__main__':" >> manage.py
+          echo "    execute_from_command_line(sys.argv)" >> manage.py
       - name: Run migrations
         run: |
+          python manage.py makemigrations
           python manage.py migrate
       - name: Run unit tests
         run: |
