@@ -41,6 +41,12 @@ jobs:
         run: |
           # No setup needed for SQLite
           echo "Using SQLite database"
+      - name: Create temporary manage.py
+        run: |
+          echo "from django.core.management import execute_from_command_line" > manage.py
+          echo "import sys" >> manage.py
+          echo "if __name__ == '__main__':" >> manage.py
+          echo "    execute_from_command_line(sys.argv)" >> manage.py
       - name: Run migrations
         run: |
           python manage.py migrate
