@@ -50,6 +50,7 @@ jobs:
           echo "    execute_from_command_line(sys.argv)" >> manage.py
       - name: Run migrations
         run: |
+          python manage.py makemigrations
           python manage.py migrate
       - name: Run unit tests
         run: |
