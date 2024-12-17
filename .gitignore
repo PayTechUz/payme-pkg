@@ -2,11 +2,14 @@
 env/
 venv/
 .env
+.venv/
+.pytest_cache
 
 # dev test
 core/
 my_app/
 db.sqlite3
+*.sqlite3
 manage.py
 dist/
 

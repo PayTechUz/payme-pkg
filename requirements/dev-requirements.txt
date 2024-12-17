@@ -10,3 +10,5 @@ pip-upgrader==1.4.15
 wheel==0.38.1
 djangorestframework==3.14.0
 environs==9.5.0
+pytest==8.3.3
+pytest-django==4.9.0

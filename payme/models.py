@@ -30,7 +30,7 @@ class PaymeTransactions(models.Model):
         (CANCELED_DURING_INIT, "Canceled during initiation"),
     ]
 
-    transaction_id = models.CharField(max_length=50)
+    transaction_id = models.CharField(max_length=50, unique=True, db_index=True)
     account = models.ForeignKey(
         AccountModel,
         related_name="payme_transactions",
