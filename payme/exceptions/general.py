@@ -1,6 +1,5 @@
 import logging
 
-
 class BaseError(Exception):
     """Base class for all errors in the payment system."""
     logger = logging.getLogger(__name__)
@@ -75,7 +74,6 @@ class InvalidParamsError(CardError):
 
 
 class InvalidTokenFormat(CardError):
-    """Invalid token format during card operation."""
     message = {
         "en": "Invalid token format.",
         "ru": "Неверный формат токена.",
@@ -174,6 +172,8 @@ class ProcessingServerError(CardError):
         super().__init__(-31002, self.message, data)
 
 
+# OTP Errors
+
 class OtpError(BaseError):
     """Base class for OTP-related errors."""
 
@@ -242,6 +242,17 @@ class UnknownPartnerError(BaseError):
 
     def __init__(self, data=None):
         super().__init__(-31601, self.message, data)
+
+
+class SystemError(CardError):
+    message = {
+        "en": "System error.",
+        "ru": "Ошибка системы.",
+        "uz": "Tizim xatosi."
+    }
+
+    def __init__(self, data=None):
+        super().__init__(-32400, self.message, data)
 
 
 errors_map = {
