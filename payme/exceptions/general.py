@@ -6,12 +6,13 @@ class BaseError(Exception):
     logger = logging.getLogger(__name__)
 
     def __init__(self, code, message, data=None):
-        super().__init__(message)
+        super().__init__(message["en"])  # Default to English
         self.code = code
         self.data = data
+        self.message = message
 
         # pylint: disable=W1203
-        self.logger.error(f"Error {code}: {message}. Data: {data}")
+        self.logger.error(f"Error {code}: {message['en']}. Data: {data}")
 
 
 class CardError(BaseError):
@@ -19,56 +20,55 @@ class CardError(BaseError):
 
 
 class TransportError(CardError):
-    """Transport error occurred during card operation."""
-    message = "Transport error."
+    message = {
+        "en": "Transport error.",
+        "ru": "Ошибка транспорта.",
+        "uz": "Transport xatosi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32300, self.message, data)
 
 
 class ParseError(CardError):
-    """Parse error occurred during card operation."""
-    message = "Parse error."
+    message = {
+        "en": "Parse error.",
+        "ru": "Ошибка парсинга.",
+        "uz": "Parse xatosi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32700, self.message, data)
 
 
 class InvalidRequestError(CardError):
-    """Invalid request made during card operation."""
-    message = "Invalid Request."
+    message = {
+        "en": "Invalid Request.",
+        "ru": "Неверный запрос.",
+        "uz": "Noto'g'ri so'rov."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32600, self.message, data)
-
-
-class InvalidResponseError(CardError):
-    """Invalid response received during card operation."""
-    message = "Invalid Response."
-
-    def __init__(self, data=None):
-        super().__init__(-32600, self.message, data)
-
-
-class SystemError(CardError):
-    """System error occurred during card operation."""
-    message = "System error."
-
-    def __init__(self, data=None):
-        super().__init__(-32400, self.message, data)
 
 
 class MethodNotFoundError(CardError):
-    """Method not found during card operation."""
-    message = "Method not found."
+    message = {
+        "en": "Method not found.",
+        "ru": "Метод не найден.",
+        "uz": "Metod topilmadi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32601, self.message, data)
 
 
 class InvalidParamsError(CardError):
-    """Invalid parameters provided during card operation."""
-    message = "Invalid Params."
+    message = {
+        "en": "Invalid Params.",
+        "ru": "Неверные параметры.",
+        "uz": "Noto'g'ri parametrlari."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32602, self.message, data)
@@ -76,179 +76,172 @@ class InvalidParamsError(CardError):
 
 class InvalidTokenFormat(CardError):
     """Invalid token format during card operation."""
-    message = "Invalid token format."
+    message = {
+        "en": "Invalid token format.",
+        "ru": "Неверный формат токена.",
+        "uz": "Noto'g'ri token formati."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32500, self.message, data)
 
 
 class AccessDeniedError(CardError):
-    """Access denied for the card operation."""
-    message = "Access denied."
+    message = {
+        "en": "Access denied.",
+        "ru": "Доступ запрещен.",
+        "uz": "Kirish taqiqlangan."
+    }
 
     def __init__(self, data=None):
         super().__init__(-32504, self.message, data)
 
 
 class CardNotFoundError(CardError):
-    """Card not found during operation."""
-    message = "Card not found."
+    message = {
+        "en": "Card not found.",
+        "ru": "Карта не найдена.",
+        "uz": "Karta topilmadi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31400, self.message, data)
 
 
 class SmsNotConnectedError(CardError):
-    """SMS notification not connected."""
-    message = "SMS notification not connected."
+    message = {
+        "en": "SMS notification not connected.",
+        "ru": "СМС-уведомление не подключено.",
+        "uz": "SMS xabarnoma ulanmadi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31301, self.message, data)
-
-
-class CardExpiredError(CardError):
-    """Card has expired."""
-    message = "Card has expired."
-
-    def __init__(self, data=None):
-        super().__init__(-31301, self.message, data)
-
-
-class CardBlockedError(CardError):
-    """Card is blocked."""
-    message = "Card is blocked."
-
-    def __init__(self, data=None):
-        super().__init__(-31301, self.message, data)
-
-
-class CorporateCardError(CardError):
-    """Financial operations with corporate cards are not allowed."""
-    message = "Financial operations with corporate cards are not allowed."
-
-    def __init__(self, data=None):
-        super().__init__(-31300, self.message, data)
 
 
 class BalanceError(CardError):
-    """Unable to retrieve card balance. Please try again later."""
-    message = "Unable to retrieve card balance. Please try again later."
+    message = {
+        "en": "Unable to retrieve card balance. Please try again later.",
+        "ru": "Не удалось получить баланс карты. Повторите попытку позже.",
+        "uz": "Karta balansini olish imkoni yo'q. Keyinroq qayta urinib ko'ring."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31302, self.message, data)
 
 
 class InsufficientFundsError(CardError):
-    """Insufficient funds on the card."""
-    message = "Insufficient funds on the card."
+    message = {
+        "en": "Insufficient funds on the card.",
+        "ru": "Недостаточно средств на карте.",
+        "uz": "Kartada yetarli mablag' yo'q."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31303, self.message, data)
 
 
 class InsufficientFundsErrorV2(CardError):
-    """Insufficient funds on the card."""
-    message = "Insufficient funds on the card."
+    message = {
+        "en": "Insufficient funds on the card.",
+        "ru": "Недостаточно средств на карте.",
+        "uz": "Kartada yetarli mablag' yo'q."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31630, self.message, data)
 
 
 class InvalidCardNumberError(CardError):
-    """Invalid card number provided."""
-    message = "Invalid card number."
-
-    def __init__(self, data=None):
-        super().__init__(-31300, self.message, data)
-
-
-class CardNotFoundWithNumberError(CardError):
-    """Card with the provided number not found."""
-    message = "Card with this number not found."
-
-    def __init__(self, data=None):
-        super().__init__(-31300, self.message, data)
-
-
-class InvalidExpiryDateError(CardError):
-    """Invalid expiry date provided for the card."""
-    message = "Invalid expiry date for the card."
+    message = {
+        "en": "Invalid card number provided.",
+        "ru": "Указан неверный номер карты.",
+        "uz": "Noto'g'ri karta raqami ko'rsatilgan."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31300, self.message, data)
 
 
 class ProcessingServerError(CardError):
-    """Processing center server is unavailable. Please try again later."""
-    message = \
-        "Processing center server is unavailable. Please try again later."
+    message = {
+        "en": "Processing center server is unavailable. Please try again later.",
+        "ru": "Сервер процессингового центра недоступен. Повторите попытку позже.",
+        "uz": "Ishlov berish markazi serveriga ulanish imkoni yo'q. Keyinroq urining."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31002, self.message, data)
 
-
-# OTP Module Errors
 
 class OtpError(BaseError):
     """Base class for OTP-related errors."""
 
 
 class OtpSendError(OtpError):
-    """Error occurred while sending OTP."""
-    message = "Error occurred while sending SMS. Please try again."
+    message = {
+        "en": "Error occurred while sending OTP. Please try again.",
+        "ru": "Ошибка при отправке OTP. Повторите попытку.",
+        "uz": "OTP yuborishda xatolik yuz berdi. Qayta urinib ko'ring."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31110, self.message, data)
 
 
-class OtpCheckError(OtpError):
-    """Base class for OTP check errors."""
-
-
-class OtpExpiredError(OtpCheckError):
-    """OTP code has expired. Request a new code."""
-    message = "OTP code has expired. Request a new code."
+class OtpExpiredError(OtpError):
+    message = {
+        "en": "OTP code has expired. Request a new code.",
+        "ru": "Код OTP истек. Запросите новый код.",
+        "uz": "OTP kodi eskirdi. Yangi kodni so'rang."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31101, self.message, data)
 
 
-class OtpAttemptsExceededError(OtpCheckError):
-    """
-    Number of attempts to enter the code has been exceeded. Request a new code.
-    """
-    message = "Number of attempts to enter the code has been exceeded."
+class OtpAttemptsExceededError(OtpError):
+    message = {
+        "en": "Number of attempts to enter the code has been exceeded.",
+        "ru": "Превышено количество попыток ввода кода.",
+        "uz": "Kodni kiritish urinishlari soni oshib ketdi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31102, self.message, data)
 
 
-class OtpInvalidCodeError(OtpCheckError):
-    """Invalid OTP code entered."""
-    message = "Invalid OTP code."
+class OtpInvalidCodeError(OtpError):
+    message = {
+        "en": "Invalid OTP code entered.",
+        "ru": "Введен неверный код OTP.",
+        "uz": "Noto'g'ri OTP kodi kiritildi."
+    }
 
     def __init__(self, data=None):
         super().__init__(-31103, self.message, data)
 
 
-class PaymeNetworkError(BaseError):
-    """Network error occurred during request to Payme server."""
-    message = "Network error occurred during request to Payme server."
+class ReceiptsNotFoundError(BaseError):
+    message = {
+        "en": "No receipts found for the given transaction ID.",
+        "ru": "Квитанции по данному ID транзакции не найдены.",
+        "uz": "Berilgan tranzaksiya ID uchun kvitansiyalar topilmadi."
+    }
 
     def __init__(self, data=None):
-        super().__init__(self.message, data)
+        super().__init__(-31602, self.message, data)
 
 
-class ReceiptsNotFoundError(BaseException):
-    """No receipts found for the given transaction ID."""
-    def __init__(self, message="No receipts found for the given transaction ID.", data=None):
-        super().__init__(message, data)
+class UnknownPartnerError(BaseError):
+    message = {
+        "en": "The given partner ID is unknown.",
+        "ru": "Указанный идентификатор партнера неизвестен.",
+        "uz": "Ko'rsatilgan hamkor ID noma'lum."
+    }
 
-
-class UnknownPartnerError(BaseException):
-    """The given partner ID is unknown."""
-    def __init__(self, message="Unknown partner or ID and Key not active", data=None):
-        super().__init__(message, data)
+    def __init__(self, data=None):
+        super().__init__(-31601, self.message, data)
 
 
 errors_map = {
